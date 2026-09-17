@@ -10,6 +10,10 @@ void MessageHandler(SKSE::MessagingInterface::Message* a_message)
 	case SKSE::MessagingInterface::kDataLoaded:
 		Manager::GetSingleton()->Register();
 		break;
+	case SKSE::MessagingInterface::kPreLoadGame:
+	case SKSE::MessagingInterface::kNewGame:
+		Manager::GetSingleton()->ResetState();
+		break;
 	default:
 		break;
 	}

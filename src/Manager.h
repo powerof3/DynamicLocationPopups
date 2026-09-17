@@ -7,6 +7,7 @@ class Manager :
 public:
 	void Register();
 	void LoadSettings();
+	void ResetState();
 
 	bool ShouldMuteJingle();
 	void SendLocationPopup(RE::MapMarkerData* a_mapMarkerData);

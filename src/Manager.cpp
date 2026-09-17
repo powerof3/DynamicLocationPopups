@@ -14,29 +14,37 @@ void Manager::LoadSettings()
 	store->Save();
 }
 
+void Manager::ResetState()
+{
+	currentCRC = 0;
+	lastCRC = 0;
+}
+
 const char* Manager::GetLocationOnEntry(RE::MapMarkerData* a_mapMarkerData)
 {
 	if (!a_mapMarkerData) {
 		return nullptr;
 	}
 
-	auto locationName = a_mapMarkerData->locationName.GetFullName();
-	auto locationCRC = RE::BSCRC32<const char*>()(locationName);
-
-	if (mode == 1) {
-		if (locationCRC != lastCRC && locationCRC != currentCRC) {
-			lastCRC = currentCRC;
-			currentCRC = locationCRC;
-			return locationName;
-		}
-	} else {
-		if (locationCRC != currentCRC) {
-			currentCRC = locationCRC;
-			return locationName;
-		}
+	const auto locationName = a_mapMarkerData->locationName.GetFullName();
+	if (REX::STR::IS_EMPTY(locationName)) {
+		return nullptr;
 	}
 
-	return nullptr;
+	const auto locationCRC = RE::BSCRC32<std::string_view>()(locationName);
+
+	if (locationCRC == currentCRC) {
+		return nullptr;
+	}
+
+	if (mode == 1 && locationCRC == lastCRC) {
+		std::swap(currentCRC, lastCRC); 
+		return nullptr;
+	}
+
+	lastCRC = currentCRC;
+	currentCRC = locationCRC;
+	return locationName;
 }
 
 bool Manager::ShouldMuteJingle()
