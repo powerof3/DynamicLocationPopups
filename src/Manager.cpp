@@ -65,6 +65,7 @@ void Manager::SendLocationPopup(RE::MapMarkerData* a_mapMarkerData)
 			hudData->typeData = a_mapMarkerData->type.underlying();
 			hudData->text = locName;
 			RE::UIMessageQueue::GetSingleton()->AddMessage(RE::InterfaceStrings::GetSingleton()->hudMenu, RE::UI_MESSAGE_TYPE::kUpdate, hudData);
+			logger::info("Sending location popup: {}", locName);
 		}
 	}
 }

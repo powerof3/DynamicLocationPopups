@@ -8,8 +8,10 @@ namespace RE
 
 #ifdef SKYRIM_SUPPORT_AE
 		static REL::Relocation<std::uint32_t*> CURRENT_LOCATION{ REL::ID(406125) };
+#elif !defined(SKYRIMVR)
+		static REL::Relocation<std::uint32_t*> CURRENT_LOCATION{ REL::Offset(0x2F4C90C) }; // SSE
 #else
-		static REL::Relocation<std::uint32_t*> CURRENT_LOCATION{ REL::Offset(0x2F4C90C) };
+		static REL::Relocation<std::uint32_t*> CURRENT_LOCATION{ REL::Offset(0x3011d34) }; // VR
 #endif
 	}
 }
