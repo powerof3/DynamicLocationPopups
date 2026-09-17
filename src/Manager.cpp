@@ -7,17 +7,11 @@ void Manager::Register()
 
 void Manager::LoadSettings()
 {
-	constexpr auto path = L"Data/SKSE/Plugins/po3_DynamicLocationNamePopups.ini";
+	const auto store = REX::FIniSettingStore::GetSingleton();
+	store->Init(path.data(), "");
 
-	CSimpleIniA ini;
-	ini.SetUnicode();
-
-	ini.LoadFile(path);
-
-	ini::get_value(ini, mode, "Settings", "iMode", ";Triggers location popup when:\n;0 - Entering any new location.\n;1 - Entering a location different from the current or last visited.");
-	ini::get_value(ini, muteJingle, "Settings", "bMuteJingle", ";Mute discovery music jingle when entering a location.");
-
-	(void)ini.SaveFile(path);
+	store->Load();
+	store->Save();
 }
 
 const char* Manager::GetLocationOnEntry(RE::MapMarkerData* a_mapMarkerData)
@@ -56,7 +50,7 @@ bool Manager::ShouldMuteJingle()
 
 void Manager::SendLocationPopup(RE::MapMarkerData* a_mapMarkerData)
 {
-	if (auto locName = GetLocationOnEntry(a_mapMarkerData); !string::is_empty(locName)) {
+	if (auto locName = GetLocationOnEntry(a_mapMarkerData); !REX::STR::IS_EMPTY(locName)) {
 		if (auto hudData = static_cast<RE::HUDData*>(RE::UIMessageQueue::GetSingleton()->CreateUIMessageData(RE::InterfaceStrings::GetSingleton()->hudData))) {
 			showLocationPopUp = true;
 			lastMarkerType = a_mapMarkerData->type.get();
@@ -65,7 +59,7 @@ void Manager::SendLocationPopup(RE::MapMarkerData* a_mapMarkerData)
 			hudData->typeData = a_mapMarkerData->type.underlying();
 			hudData->text = locName;
 			RE::UIMessageQueue::GetSingleton()->AddMessage(RE::InterfaceStrings::GetSingleton()->hudMenu, RE::UI_MESSAGE_TYPE::kUpdate, hudData);
-			logger::info("Sending location popup: {}", locName);
+			REX::INFO("Sending location popup: {}", locName);
 		}
 	}
 }
