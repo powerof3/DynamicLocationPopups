@@ -38,7 +38,7 @@ const char* Manager::GetLocationOnEntry(RE::MapMarkerData* a_mapMarkerData)
 	}
 
 	if (mode == 1 && locationCRC == lastCRC) {
-		std::swap(currentCRC, lastCRC); 
+		std::swap(currentCRC, lastCRC);
 		return nullptr;
 	}
 
